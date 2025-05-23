@@ -3,16 +3,26 @@ package com.example.smallbusinessmanagement.service;
 import com.example.smallbusinessmanagement.dto.UserRequest;
 import com.example.smallbusinessmanagement.enums.UserRole;
 import com.example.smallbusinessmanagement.model.User;
-import com.example.smallbusinessmanagement.repo.UserRepository;
+import com.example.smallbusinessmanagement.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username ->  userRepository.findByEmailIgnoreCase(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
+    }
+
 
     @Transactional
     public User createUser(UserRequest request) {

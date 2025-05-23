@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/{warehouseId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<ProductResponse> createProduct(
             @Valid @RequestBody ProductRequest request,
             @PathVariable Long warehouseId
@@ -32,6 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYEE')")
     public ResponseEntity<List<ProductResponse>> searchProducts(
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) Size size,
@@ -43,6 +46,7 @@ public class ProductController {
 
 
     @GetMapping("/low-stock")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<List<ProductResponse>> getLowStockProducts(
             @RequestParam(defaultValue = "5") int threshold
     ) {
@@ -51,6 +55,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}/price")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> updateProductPrice(
             @PathVariable Long id,
             @RequestParam BigDecimal newPrice

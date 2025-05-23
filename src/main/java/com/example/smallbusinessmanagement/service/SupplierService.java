@@ -2,7 +2,7 @@ package com.example.smallbusinessmanagement.service;
 
 import com.example.smallbusinessmanagement.dto.SupplierRequest;
 import com.example.smallbusinessmanagement.model.Supplier;
-import com.example.smallbusinessmanagement.repo.SupplierRepository;
+import com.example.smallbusinessmanagement.repository.SupplierRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

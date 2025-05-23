@@ -6,6 +6,7 @@ import com.example.smallbusinessmanagement.model.User;
 import com.example.smallbusinessmanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,11 +17,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody UserRequest request) {
         return ResponseEntity.ok(userService.createUser(request));
     }
 
     @PutMapping("/{id}/role")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<User> updateUserRole(@PathVariable Long id,
                                                @RequestParam UserRole role) {
         return ResponseEntity.ok(userService.updateUserRole(id, role));

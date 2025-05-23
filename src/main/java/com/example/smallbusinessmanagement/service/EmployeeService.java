@@ -3,14 +3,12 @@ package com.example.smallbusinessmanagement.service;
 import com.example.smallbusinessmanagement.dto.EmployeeRequest;
 import com.example.smallbusinessmanagement.model.Employee;
 import com.example.smallbusinessmanagement.model.User;
-import com.example.smallbusinessmanagement.repo.EmployeeRepository;
-import com.example.smallbusinessmanagement.repo.UserRepository;
+import com.example.smallbusinessmanagement.repository.EmployeeRepository;
+import com.example.smallbusinessmanagement.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.example.smallbusinessmanagement.repo;
+package com.example.smallbusinessmanagement.repository;
 
 import com.example.smallbusinessmanagement.enums.Color;
 import com.example.smallbusinessmanagement.enums.ProductCategory;

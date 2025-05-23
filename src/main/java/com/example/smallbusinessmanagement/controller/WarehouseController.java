@@ -6,6 +6,7 @@ import com.example.smallbusinessmanagement.model.Warehouse;
 import com.example.smallbusinessmanagement.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,11 +17,13 @@ public class WarehouseController {
     private final WarehouseService warehouseService;
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<Warehouse> createWarehouse(@RequestBody WarehouseRequest request) {
         return ResponseEntity.ok(warehouseService.createWarehouse(request));
     }
 
     @GetMapping("/{id}/stock")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<WarehouseStockResponse> getStock(@PathVariable Long id) {
         return ResponseEntity.ok(warehouseService.getWarehouseStock(id));
     }

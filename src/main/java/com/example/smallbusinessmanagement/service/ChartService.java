@@ -1,8 +1,7 @@
 package com.example.smallbusinessmanagement.service;
 
 import com.example.smallbusinessmanagement.dto.SalesChartDTO;
-import com.example.smallbusinessmanagement.model.Sale;
-import com.example.smallbusinessmanagement.repo.SaleRepository;
+import com.example.smallbusinessmanagement.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

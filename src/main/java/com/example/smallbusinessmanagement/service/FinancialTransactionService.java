@@ -4,7 +4,7 @@ import com.example.smallbusinessmanagement.enums.TransactionType;
 import com.example.smallbusinessmanagement.model.FinancialTransaction;
 import com.example.smallbusinessmanagement.model.Sale;
 import com.example.smallbusinessmanagement.model.Supply;
-import com.example.smallbusinessmanagement.repo.FinancialTransactionRepository;
+import com.example.smallbusinessmanagement.repository.FinancialTransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

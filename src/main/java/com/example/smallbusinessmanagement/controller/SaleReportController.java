@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ public class SaleReportController {
     private final SaleReportService saleReportService;
 
     @GetMapping(value = "/sales/excel", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'ACCOUNTANT')")
     public ResponseEntity<byte[]> getSalesExcelReport(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end
