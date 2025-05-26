@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor
@@ -21,6 +23,12 @@ public class EmployeeController {
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody EmployeeRequest request, Long userId) {
         Employee createdEmployee = employeeService.createEmployee(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
 }
