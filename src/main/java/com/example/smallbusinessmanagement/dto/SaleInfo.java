@@ -3,11 +3,12 @@ package com.example.smallbusinessmanagement.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-public class EmployeeResponse {
+public class SaleInfo {
     private Long id;
-    private String fullName;
-    private String position;
-    private Long userId;
+    private LocalDateTime date;
+    private CustomerInfo customer;
 }

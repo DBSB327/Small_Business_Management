@@ -22,8 +22,8 @@ public class Supply {
     private Supplier supplier;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User employee;
 
     @OneToMany(mappedBy = "supply", cascade = CascadeType.ALL)
     private List<SupplyItem> items;

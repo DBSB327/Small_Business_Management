@@ -26,7 +26,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "assignee_id", nullable = false)
-    private Employee assignee;
+    private User assignee;
 
     @Column(nullable = false)
     private LocalDateTime deadline;

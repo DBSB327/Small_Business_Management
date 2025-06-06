@@ -33,8 +33,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private UserRole role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Employee employee;
+    @Column(nullable = false)
+    private String fullName;
+
+    @Column(nullable = false, unique = true)
+    private String phone;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

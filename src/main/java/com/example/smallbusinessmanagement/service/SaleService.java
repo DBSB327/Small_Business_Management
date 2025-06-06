@@ -4,16 +4,13 @@ import com.example.smallbusinessmanagement.dto.*;
 import com.example.smallbusinessmanagement.exceptions.InsufficientStockException;
 import com.example.smallbusinessmanagement.exceptions.InvalidDiscountException;
 import com.example.smallbusinessmanagement.model.*;
-import com.example.smallbusinessmanagement.repository.CustomerRepository;
-import com.example.smallbusinessmanagement.repository.EmployeeRepository;
-import com.example.smallbusinessmanagement.repository.ProductRepository;
-import com.example.smallbusinessmanagement.repository.SaleRepository;
+import com.example.smallbusinessmanagement.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,17 +23,22 @@ public class SaleService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
     private final FinancialTransactionService transactionService;
-    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public SaleResponse createSale(SaleRequest request) {
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new EntityNotFoundException("Сотрудник не найден"));
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("Аутентифицированный пользователь: " + username);
+
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
+
         Customer customer = getCustomerIfPresent(request.getCustomerId());
 
         Sale sale = new Sale();
         sale.setDate(LocalDateTime.now());
-        sale.setEmployee(employee);
+        sale.setEmployee(user); // автоматически текущий залогиненный пользователь
         sale.setCustomer(customer);
         sale.setDiscount(request.getDiscount());
         sale.setPaymentMethod(request.getPaymentMethod());
@@ -132,5 +134,18 @@ public class SaleService {
         response.setItems(itemResponses);
 
         return response;
+    }
+
+    private SaleResponse mapToResponse(Sale sale) {
+        BigDecimal total = calculateTotal(sale.getItems(), sale.getDiscount());
+        return mapToResponse(sale, total);
+    }
+
+
+    public List<SaleResponse> getAllSales() {
+        List<Sale> sales = saleRepository.findAll();
+        return sales.stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 }

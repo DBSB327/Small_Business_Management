@@ -56,7 +56,7 @@ public class SaleReportService {
     }
 
     private void createExcelHeaderRow(Row headerRow) {
-        String[] headers = {"Date", "Customer", "Employee", "Items Count", "Total", "Payment Method"};
+        String[] headers = {"Дата", "Клиент", "Сотрудник", "Количество продукта", "Сумма", "Метод оплаты"};
         for (int i = 0; i < headers.length; i++) {
             headerRow.createCell(i).setCellValue(headers[i]);
         }

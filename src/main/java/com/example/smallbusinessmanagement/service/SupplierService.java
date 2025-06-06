@@ -1,6 +1,7 @@
 package com.example.smallbusinessmanagement.service;
 
 import com.example.smallbusinessmanagement.dto.SupplierRequest;
+import com.example.smallbusinessmanagement.dto.SupplierResponse;
 import com.example.smallbusinessmanagement.model.Supplier;
 import com.example.smallbusinessmanagement.repository.SupplierRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +36,12 @@ public class SupplierService {
         supplier.setContactPhone(newPhone);
         supplier.setEmail(newEmail);
         return supplierRepository.save(supplier);
+    }
+
+    public List<SupplierResponse> getAllSuppliers() {
+        List<Supplier> suppliers = supplierRepository.findAll();
+        return suppliers.stream()
+                .map(s -> new SupplierResponse(s.getId(), s.getName(), s.getContactPhone(), s.getEmail()))
+                .collect(Collectors.toList());
     }
 }

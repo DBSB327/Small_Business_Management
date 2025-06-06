@@ -31,4 +31,7 @@ public class ProductRequest {
 
     @Positive
     private BigDecimal sellingPrice;
+
+    @NotNull
+    private int stock;
 }

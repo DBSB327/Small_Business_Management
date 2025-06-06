@@ -39,7 +39,7 @@ public class ProductService {
         product.setPurchasePrice(request.getPurchasePrice());
         product.setSellingPrice(request.getSellingPrice());
         product.setWarehouse(warehouse);
-        product.setStock(0);
+        product.setStock(request.getStock());
 
         Product savedProduct = productRepository.save(product);
         return productMapper.toResponse(savedProduct);

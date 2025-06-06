@@ -2,10 +2,11 @@ package com.example.smallbusinessmanagement.service;
 
 import com.example.smallbusinessmanagement.dto.TaskRequest;
 import com.example.smallbusinessmanagement.enums.TaskStatus;
-import com.example.smallbusinessmanagement.model.Employee;
+import com.example.smallbusinessmanagement.enums.UserRole;
 import com.example.smallbusinessmanagement.model.Task;
-import com.example.smallbusinessmanagement.repository.EmployeeRepository;
+import com.example.smallbusinessmanagement.model.User;
 import com.example.smallbusinessmanagement.repository.TaskRepository;
+import com.example.smallbusinessmanagement.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-    private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Task createTask(TaskRequest request) {
-        Employee assignee = employeeRepository.findById(request.getAssigneeId())
+        User assignee = userRepository.findById(request.getAssigneeId())
                 .orElseThrow(() -> new EntityNotFoundException("Сотрудник не найден"));
 
+        if(assignee.getRole()!= UserRole.EMPLOYEE){
+            throw new RuntimeException("Задачу можно назначать только сотрудникам");
+        }
         Task task = new Task();
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());

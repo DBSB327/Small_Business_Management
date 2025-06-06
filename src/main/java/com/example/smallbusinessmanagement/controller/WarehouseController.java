@@ -1,6 +1,7 @@
 package com.example.smallbusinessmanagement.controller;
 
 import com.example.smallbusinessmanagement.dto.WarehouseRequest;
+import com.example.smallbusinessmanagement.dto.WarehouseResponse;
 import com.example.smallbusinessmanagement.dto.WarehouseStockResponse;
 import com.example.smallbusinessmanagement.model.Warehouse;
 import com.example.smallbusinessmanagement.service.WarehouseService;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/warehouses")
@@ -27,5 +30,13 @@ public class WarehouseController {
     public ResponseEntity<WarehouseStockResponse> getStock(@PathVariable Long id) {
         return ResponseEntity.ok(warehouseService.getWarehouseStock(id));
     }
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    public ResponseEntity<List<WarehouseResponse>> getAllWarehouses() {
+        List<WarehouseResponse> warehouses = warehouseService.getAllWarehouses();
+        return ResponseEntity.ok(warehouses);
+    }
+
 }
 

@@ -16,6 +16,7 @@ public class Warehouse {
     @Column(nullable = false)
     private String name;
 
+    
     @Column(nullable = false)
     private String address;
 

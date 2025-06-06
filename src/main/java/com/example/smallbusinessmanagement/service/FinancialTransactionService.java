@@ -1,5 +1,8 @@
 package com.example.smallbusinessmanagement.service;
 
+import com.example.smallbusinessmanagement.dto.CustomerInfo;
+import com.example.smallbusinessmanagement.dto.FinancialTransactionResponse;
+import com.example.smallbusinessmanagement.dto.SaleInfo;
 import com.example.smallbusinessmanagement.enums.TransactionType;
 import com.example.smallbusinessmanagement.model.FinancialTransaction;
 import com.example.smallbusinessmanagement.model.Sale;
@@ -12,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,11 +44,48 @@ public class FinancialTransactionService {
         transactionRepository.save(transaction);
     }
 
-    public List<FinancialTransaction> getTransactionsByPeriod(LocalDate start, LocalDate end) {
+    public List<FinancialTransactionResponse> getTransactionsByPeriod(LocalDate start, LocalDate end) {
+        if (start == null) {
+            start = LocalDate.of(2000, 1, 1);
+        }
+        if (end == null) {
+            end = LocalDate.now();
+        }
         LocalDateTime startDateTime = start.atStartOfDay();
         LocalDateTime endDateTime = end.plusDays(1).atStartOfDay().minusSeconds(1);
-        return transactionRepository.findByDateBetween(startDateTime, endDateTime);
-        }
+
+        List<FinancialTransaction> transactions = transactionRepository.findByDateBetween(startDateTime, endDateTime);
+
+        return transactions.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
+
+    private FinancialTransactionResponse convertToDto(FinancialTransaction tx) {
+        FinancialTransactionResponse dto = new FinancialTransactionResponse();
+        dto.setId(tx.getId());
+        dto.setDate(tx.getDate());
+        dto.setType(tx.getType().name());
+        dto.setAmount(tx.getAmount());
+        dto.setDescription(tx.getDescription());
+
+        if (tx.getSale() != null) {
+            SaleInfo saleDto = new SaleInfo();
+            saleDto.setId(tx.getSale().getId());
+            saleDto.setDate(tx.getSale().getDate());
+
+            if (tx.getSale().getCustomer() != null) {
+                CustomerInfo customerDto = new CustomerInfo();
+                customerDto.setId(tx.getSale().getCustomer().getId());
+                customerDto.setName(tx.getSale().getCustomer().getFullName());
+                customerDto.setPhone(tx.getSale().getCustomer().getPhone());
+                saleDto.setCustomer(customerDto);
+            }
+            dto.setSale(saleDto);
+        }
+
+        return dto;
+    }
+}
 
 

@@ -1,5 +1,6 @@
 package com.example.smallbusinessmanagement.service;
 
+import com.example.smallbusinessmanagement.dto.CustomerInfo;
 import com.example.smallbusinessmanagement.dto.CustomerRequest;
 import com.example.smallbusinessmanagement.dto.CustomerSalesResponse;
 import com.example.smallbusinessmanagement.model.Customer;
@@ -46,4 +47,22 @@ public class CustomerService {
                 totalSpent
         );
     }
+
+    public List<CustomerInfo> getAllCustomerInfos() {
+        List<Customer> customers = customerRepository.findAll();
+        return customers.stream()
+                .map(this::mapToCustomerInfo)
+                .toList();
+    }
+
+    private CustomerInfo mapToCustomerInfo(Customer customer) {
+        CustomerInfo info = new CustomerInfo();
+        info.setId(customer.getId());
+        info.setName(customer.getFullName());
+        info.setPhone(customer.getPhone());
+        return info;
+    }
 }
+
+
+

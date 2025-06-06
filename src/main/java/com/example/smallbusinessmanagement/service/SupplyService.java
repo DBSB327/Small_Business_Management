@@ -5,13 +5,11 @@ import com.example.smallbusinessmanagement.dto.SupplyItemResponse;
 import com.example.smallbusinessmanagement.dto.SupplyRequest;
 import com.example.smallbusinessmanagement.dto.SupplyResponse;
 import com.example.smallbusinessmanagement.model.*;
-import com.example.smallbusinessmanagement.repository.EmployeeRepository;
-import com.example.smallbusinessmanagement.repository.ProductRepository;
-import com.example.smallbusinessmanagement.repository.SupplierRepository;
-import com.example.smallbusinessmanagement.repository.SupplyRepository;
+import com.example.smallbusinessmanagement.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,21 +23,23 @@ public class SupplyService {
     private final SupplyRepository supplyRepository;
     private final SupplierRepository supplierRepository;
     private final ProductRepository productRepository;
-    private final EmployeeRepository employeeRepository;
     private final FinancialTransactionService transactionService;
-
+    private final UserRepository userRepository;
     @Transactional
-    public SupplyResponse createSupply(SupplyRequest request, Long employeeId) {
+    public SupplyResponse createSupply(SupplyRequest request) {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Supplier supplier = supplierRepository.findById(request.getSupplierId())
                 .orElseThrow(() -> new EntityNotFoundException("Поставщик не найден"));
 
-        Employee employee = employeeRepository.findById(employeeId)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException("Сотрудник не найден"));
 
         Supply supply = new Supply();
         supply.setDate(LocalDateTime.now());
         supply.setSupplier(supplier);
-        supply.setEmployee(employee);
+        supply.setEmployee(user);
 
         List<SupplyItem> supplyItems = processSupplyItems(request.getItems(), supply);
         supply.setItems(supplyItems);
@@ -90,5 +90,18 @@ public class SupplyService {
                 totalCost
         );
     }
+
+    @Transactional
+    public List<SupplyResponse> getSupplies() {
+        List<Supply> supplies = supplyRepository.findAll();
+
+        return supplies.stream()
+                .map(supply -> {
+                    BigDecimal totalCost = calculateTotalCost(supply.getItems());
+                    return mapToResponse(supply, totalCost);
+                })
+                .toList();
+    }
+
 }
 

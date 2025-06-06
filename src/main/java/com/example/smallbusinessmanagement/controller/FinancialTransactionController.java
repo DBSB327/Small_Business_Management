@@ -1,8 +1,10 @@
 package com.example.smallbusinessmanagement.controller;
 
+import com.example.smallbusinessmanagement.dto.FinancialTransactionResponse;
 import com.example.smallbusinessmanagement.model.FinancialTransaction;
 import com.example.smallbusinessmanagement.service.FinancialTransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +22,12 @@ public class FinancialTransactionController {
     private final FinancialTransactionService transactionService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'ACCOUNTANT')")
-    public ResponseEntity<List<FinancialTransaction>> getAllTransactions(@RequestParam(required = false) LocalDate start, @RequestParam(required = false) LocalDate end) {
-        List<FinancialTransaction> transactions = transactionService.getTransactionsByPeriod(start, end);
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'ACCOUNTANT')")
+    public ResponseEntity<List<FinancialTransactionResponse>> getTransactions(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+
+        List<FinancialTransactionResponse> transactions = transactionService.getTransactionsByPeriod(start, end);
         return ResponseEntity.ok(transactions);
     }
 }

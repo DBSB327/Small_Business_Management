@@ -2,6 +2,7 @@ package com.example.smallbusinessmanagement.service;
 
 import com.example.smallbusinessmanagement.dto.ProductStockInfo;
 import com.example.smallbusinessmanagement.dto.WarehouseRequest;
+import com.example.smallbusinessmanagement.dto.WarehouseResponse;
 import com.example.smallbusinessmanagement.dto.WarehouseStockResponse;
 import com.example.smallbusinessmanagement.model.Product;
 import com.example.smallbusinessmanagement.model.Warehouse;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +46,18 @@ public class WarehouseService {
                 warehouse.getName(),
                 stockInfo
         );
+    }
+
+    public List<WarehouseResponse> getAllWarehouses() {
+        List<Warehouse> warehouses = warehouseRepository.findAll();
+        return warehouses.stream()
+                .map(warehouse -> {
+                    WarehouseResponse response = new WarehouseResponse();
+                    response.setId(warehouse.getId());
+                    response.setName(warehouse.getName());
+                    response.setAddress(warehouse.getAddress());
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 }

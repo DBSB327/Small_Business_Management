@@ -1,6 +1,7 @@
 package com.example.smallbusinessmanagement.controller;
 
 import com.example.smallbusinessmanagement.dto.SupplierRequest;
+import com.example.smallbusinessmanagement.dto.SupplierResponse;
 import com.example.smallbusinessmanagement.model.Supplier;
 import com.example.smallbusinessmanagement.service.SupplierService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,12 @@ import java.util.List;
 public class SupplierController {
 
     private final SupplierService supplierService;
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    public ResponseEntity<List<SupplierResponse>> getAllSuppliers() {
+        return ResponseEntity.ok(supplierService.getAllSuppliers());
+    }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
@@ -36,4 +43,6 @@ public class SupplierController {
                                                   @RequestParam String email) {
         return ResponseEntity.ok(supplierService.updateSupplierContact(id, phone, email));
     }
+
+
 }

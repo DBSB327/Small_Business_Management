@@ -21,7 +21,7 @@ public class ChartController {
     private final ChartService chartService;
 
     @GetMapping("/sales")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'ACCOUNTANT')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT')")
     public ResponseEntity<SalesChartDTO> getSalesChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
         SalesChartDTO data = chartService.getSalesChartData(start,end);

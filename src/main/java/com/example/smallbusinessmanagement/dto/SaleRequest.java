@@ -21,7 +21,4 @@ public class SaleRequest {
     BigDecimal discount;
     @NotNull
     PaymentMethod paymentMethod;
-
-    @NotNull
-    private Long employeeId;
 }
