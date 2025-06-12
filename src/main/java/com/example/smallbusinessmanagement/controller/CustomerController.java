@@ -28,14 +28,14 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}/sales")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT','EMPLOYEE')")
     public ResponseEntity<CustomerSalesResponse> getCustomerSales(@PathVariable Long id) {
         CustomerSalesResponse response = customerService.getCustomerSales(id);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'EMPLOYEE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'EMPLOYEE', 'ACCOUNTANT','EMPLOYEE')")
     public ResponseEntity<List<CustomerInfo>> getAllCustomers() {
         List<CustomerInfo> customerInfos = customerService.getAllCustomerInfos();
         return ResponseEntity.ok(customerInfos);

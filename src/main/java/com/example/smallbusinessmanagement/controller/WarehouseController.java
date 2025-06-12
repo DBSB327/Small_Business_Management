@@ -26,13 +26,13 @@ public class WarehouseController {
     }
 
     @GetMapping("/{id}/stock")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
     public ResponseEntity<WarehouseStockResponse> getStock(@PathVariable Long id) {
         return ResponseEntity.ok(warehouseService.getWarehouseStock(id));
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
     public ResponseEntity<List<WarehouseResponse>> getAllWarehouses() {
         List<WarehouseResponse> warehouses = warehouseService.getAllWarehouses();
         return ResponseEntity.ok(warehouses);

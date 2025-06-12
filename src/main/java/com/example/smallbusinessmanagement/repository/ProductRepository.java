@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -28,9 +29,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("size") Size size,
             @Param("color") Color color);
 
-//    List<Product> findBySize(Size size);
-//
-//    List<Product> findByColor(Color color);
-//
-//    List<Product> findByCategoryAndSizeAndColor(ProductCategory category, Size size, Color color);
+    @Query("SELECT SUM(p.stock) FROM Product p")
+    Integer sumStock();
+
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.stock < :threshold")
+    Long countByStockLessThan(@Param("threshold") int threshold);
+
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.stock = 0")
+    Long countByStock(int stock);
+
+    @Query("SELECT SUM(p.stock * p.purchasePrice) FROM Product p")
+    BigDecimal calculateInventoryValue();
 }

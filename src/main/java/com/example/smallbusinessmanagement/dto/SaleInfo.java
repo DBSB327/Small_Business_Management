@@ -11,4 +11,5 @@ public class SaleInfo {
     private Long id;
     private LocalDateTime date;
     private CustomerInfo customer;
+
 }

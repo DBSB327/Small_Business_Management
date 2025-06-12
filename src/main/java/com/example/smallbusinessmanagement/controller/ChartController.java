@@ -1,5 +1,7 @@
 package com.example.smallbusinessmanagement.controller;
 
+import com.example.smallbusinessmanagement.dto.InventoryStatsDTO;
+import com.example.smallbusinessmanagement.dto.RecentSalesResponse;
 import com.example.smallbusinessmanagement.dto.SalesChartDTO;
 import com.example.smallbusinessmanagement.service.ChartService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,25 @@ public class ChartController {
     private final ChartService chartService;
 
     @GetMapping("/sales")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
     public ResponseEntity<SalesChartDTO> getSalesChart(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        SalesChartDTO data = chartService.getSalesChartData(start,end);
+        SalesChartDTO data = chartService.getSalesChartData(start, end);
         return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/recent-sales")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
+    public ResponseEntity<RecentSalesResponse> getRecentSales() {
+        RecentSalesResponse response = chartService.getRecentSales();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/inventory-stats")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
+    public ResponseEntity<InventoryStatsDTO> getInventoryStats() {
+        InventoryStatsDTO stats = chartService.getInventoryStats();
+        return ResponseEntity.ok(stats);
 
     }
 }

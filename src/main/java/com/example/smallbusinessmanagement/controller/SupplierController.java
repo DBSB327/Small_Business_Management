@@ -19,7 +19,7 @@ public class SupplierController {
     private final SupplierService supplierService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
     public ResponseEntity<List<SupplierResponse>> getAllSuppliers() {
         return ResponseEntity.ok(supplierService.getAllSuppliers());
     }

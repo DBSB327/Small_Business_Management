@@ -24,7 +24,7 @@ public class SupplyController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
     public ResponseEntity<List<SupplyResponse>> getAllSupply() {
         return ResponseEntity.ok(supplyService.getSupplies());
     }

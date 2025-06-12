@@ -34,7 +34,7 @@
         }
 
         @GetMapping("/search")
-        @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'EMPLOYEE')")
+        @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'EMPLOYEE' , 'ACCOUNTANT')")
         public ResponseEntity<List<ProductResponse>> searchProducts(
                 @RequestParam(required = false) ProductCategory category,
                 @RequestParam(required = false) Size size,
