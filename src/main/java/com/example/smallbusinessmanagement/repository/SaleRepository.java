@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,6 +29,23 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     @Query("SELECT SUM(t.amount) FROM Sale s JOIN s.transaction t")
     BigDecimal sumTotalRevenue();
+
+    @Query("""
+    SELECT 
+        p.id, 
+        p.name, 
+        p.category, 
+        p.size, 
+        p.color, 
+        SUM(si.quantity), 
+        SUM(si.quantity * si.sellingPrice)
+    FROM SaleItem si 
+    JOIN si.product p 
+    GROUP BY p.id, p.name, p.category, p.size, p.color
+    ORDER BY SUM(si.quantity) DESC
+""")
+    List<Object[]> findTopSellingProducts(Pageable pageable);
+
 
     List<Sale> findTop10ByOrderByDateDesc();
 }

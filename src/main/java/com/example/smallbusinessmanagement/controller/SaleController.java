@@ -1,5 +1,6 @@
 package com.example.smallbusinessmanagement.controller;
 
+import com.example.smallbusinessmanagement.dto.PopularProductChartDTO;
 import com.example.smallbusinessmanagement.dto.SaleRequest;
 import com.example.smallbusinessmanagement.dto.SaleResponse;
 import com.example.smallbusinessmanagement.service.SaleService;
@@ -31,6 +32,7 @@ public class SaleController {
         SaleResponse response = saleService.createSale(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
 
 }

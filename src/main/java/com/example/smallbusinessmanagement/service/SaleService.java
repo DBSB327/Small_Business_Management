@@ -1,6 +1,9 @@
 package com.example.smallbusinessmanagement.service;
 
 import com.example.smallbusinessmanagement.dto.*;
+import com.example.smallbusinessmanagement.enums.Color;
+import com.example.smallbusinessmanagement.enums.ProductCategory;
+import com.example.smallbusinessmanagement.enums.Size;
 import com.example.smallbusinessmanagement.exceptions.InsufficientStockException;
 import com.example.smallbusinessmanagement.exceptions.InvalidDiscountException;
 import com.example.smallbusinessmanagement.model.*;
@@ -15,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -115,7 +119,7 @@ public class SaleService {
         if (sale.getCustomer() != null) {
             CustomerInfo customerInfo = new CustomerInfo();
             customerInfo.setId(sale.getCustomer().getId());
-            customerInfo.setName(sale.getCustomer().getFullName());
+            customerInfo.setFullName(sale.getCustomer().getFullName());
             customerInfo.setPhone(sale.getCustomer().getPhone());
             response.setCustomer(customerInfo);
         }
@@ -148,4 +152,26 @@ public class SaleService {
                 .map(this::mapToResponse)
                 .toList();
     }
+
+    public List<PopularProductChartDTO> getTopSellingProductsChart(int limit) {
+        List<Object[]> results = saleRepository.findTopSellingProducts(PageRequest.of(0, limit));
+        List<PopularProductChartDTO> chartData = new ArrayList<>();
+
+        for (Object[] row : results) {
+            Long id = (Long) row[0];
+            String name = (String) row[1];
+            ProductCategory category = (ProductCategory) row[2];
+            Size size = (Size) row[3];
+            Color color = (Color) row[4];
+            Long quantitySold = (row[5] instanceof Long) ? (Long) row[5] : ((Integer) row[5]).longValue();
+            BigDecimal totalRevenue = (BigDecimal) row[6];
+
+            chartData.add(new PopularProductChartDTO(
+                    id, name, category, size, color, quantitySold, totalRevenue
+            ));
+        }
+
+        return chartData;
+    }
+
 }

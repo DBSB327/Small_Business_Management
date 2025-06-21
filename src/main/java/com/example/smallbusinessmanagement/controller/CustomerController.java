@@ -28,7 +28,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}/sales")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT','EMPLOYEE')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT','EMPLOYEE') ")
     public ResponseEntity<CustomerSalesResponse> getCustomerSales(@PathVariable Long id) {
         CustomerSalesResponse response = customerService.getCustomerSales(id);
         return ResponseEntity.ok(response);

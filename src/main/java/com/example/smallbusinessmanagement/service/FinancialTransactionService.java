@@ -44,7 +44,7 @@ public class FinancialTransactionService {
         transactionRepository.save(transaction);
     }
 
-    public List<FinancialTransactionResponse> getTransactionsByPeriod(LocalDate start, LocalDate end) {
+    public List<FinancialTransactionResponse> getTransactionsByPeriod(LocalDate start, LocalDate end, TransactionType type) {
         if (start == null) {
             start = LocalDate.of(2000, 1, 1);
         }
@@ -54,12 +54,19 @@ public class FinancialTransactionService {
         LocalDateTime startDateTime = start.atStartOfDay();
         LocalDateTime endDateTime = end.plusDays(1).atStartOfDay().minusSeconds(1);
 
-        List<FinancialTransaction> transactions = transactionRepository.findByDateBetween(startDateTime, endDateTime);
+        List<FinancialTransaction> transactions;
+
+        if (type != null) {
+            transactions = transactionRepository.findByDateBetweenAndType(startDateTime, endDateTime, type);
+        } else {
+            transactions = transactionRepository.findByDateBetween(startDateTime, endDateTime);
+        }
 
         return transactions.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
+
 
     private FinancialTransactionResponse convertToDto(FinancialTransaction tx) {
         FinancialTransactionResponse dto = new FinancialTransactionResponse();
@@ -77,7 +84,7 @@ public class FinancialTransactionService {
             if (tx.getSale().getCustomer() != null) {
                 CustomerInfo customerDto = new CustomerInfo();
                 customerDto.setId(tx.getSale().getCustomer().getId());
-                customerDto.setName(tx.getSale().getCustomer().getFullName());
+                customerDto.setFullName(tx.getSale().getCustomer().getFullName());
                 customerDto.setPhone(tx.getSale().getCustomer().getPhone());
                 saleDto.setCustomer(customerDto);
             }

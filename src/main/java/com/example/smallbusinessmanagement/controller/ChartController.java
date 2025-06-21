@@ -1,9 +1,11 @@
 package com.example.smallbusinessmanagement.controller;
 
 import com.example.smallbusinessmanagement.dto.InventoryStatsDTO;
+import com.example.smallbusinessmanagement.dto.PopularProductChartDTO;
 import com.example.smallbusinessmanagement.dto.RecentSalesResponse;
 import com.example.smallbusinessmanagement.dto.SalesChartDTO;
 import com.example.smallbusinessmanagement.service.ChartService;
+import com.example.smallbusinessmanagement.service.SaleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/charts")
@@ -21,6 +24,7 @@ import java.time.LocalDate;
 public class ChartController {
 
     private final ChartService chartService;
+    private final SaleService saleService;
 
     @GetMapping("/sales")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
@@ -43,5 +47,13 @@ public class ChartController {
         InventoryStatsDTO stats = chartService.getInventoryStats();
         return ResponseEntity.ok(stats);
 
+    }
+
+    @GetMapping("/popular-products")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
+    public List<PopularProductChartDTO> getPopularProductsChart(
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        return saleService.getTopSellingProductsChart(limit);
     }
 }

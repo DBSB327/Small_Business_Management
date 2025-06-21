@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,4 +16,5 @@ public class CustomerSalesResponse {
     private String fullName;
     private int totalPurchases;
     private BigDecimal totalSpent;
+    private List<SaleResponse> sales;
 }
